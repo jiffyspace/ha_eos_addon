@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.0.7
+
+- Wrong comments in README.md's
+
 ## 1.0.6
 
 - docker image URL has to be lowercase
