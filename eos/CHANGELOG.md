@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.0.11
+
+- armv7 is also not working up to now
+
 ## 1.0.10
 
 - Missing execute permission on s6 scripts.

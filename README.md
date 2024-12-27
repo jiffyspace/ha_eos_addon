@@ -12,7 +12,6 @@ This repository contains the following add-ons
 
 ![Supports aarch64 Architecture][aarch64-shield]
 ![Supports amd64 Architecture][amd64-shield]
-![Supports armv7 Architecture][armv7-shield]
 
 _EOS add-on.__
 This is just a home assistant add-on wrapper for the great work here: <https://github.com/Akkudoktor-EOS/EOS>
@@ -38,4 +37,3 @@ Notes to developers after forking or using the github template feature:
 
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
-[armv7-shield]: https://img.shields.io/badge/armv7-yes-green.svg
