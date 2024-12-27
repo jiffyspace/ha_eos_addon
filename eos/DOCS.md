@@ -145,7 +145,7 @@ The sent payload does need to be adapted to your setup.
 3. "strompreis_euro_pro_wh": I'm using the tibber api with the sensor definition from here: <https://community.home-assistant.io/t/tibber-schedul-prices-upcoming-24-hours-prices/391565/237>. If the values for tomorrow aren't yet available, I'm just using the values for today again.
 4. The SOC entity from my PV battery is named "sensor.scb_battery_soc".
 5. The SOC entity from my electric car is named "sensor.car_soc".
-6. Another template sensor delivers the temperature forecast for today and tomorrow per heour, with the help of the [OpenWeatherMap integration](https://www.home-assistant.io/integrations/openweathermap/):
+6. Another template sensor delivers the temperature forecast for today and tomorrow per hour, with the help of the [OpenWeatherMap integration](https://www.home-assistant.io/integrations/openweathermap/):
 ```yaml
 template:
   - trigger:
