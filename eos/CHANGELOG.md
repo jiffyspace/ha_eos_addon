@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.0.6
+
+- docker image URL has to be lowercase
+
 ## 1.0.5
 
 - URL for submodules is stored in the config and .gitmodules
