@@ -1,4 +1,4 @@
-# Home Assistant Add-on: Example add-on
+# Home Assistant EOS Add-on:
 
 ## How to use
 
@@ -11,10 +11,10 @@ The optimization call can be used with the following rest command in the home as
 rest_command: 
   eos_optimize:
     url: http://localhost:8503/optimize?start_hour=0
-	method: POST
-	content_type: application/json
-	timeout: 120
-	payload: "{{ payload }}"
+    method: POST
+    content_type: application/json
+    timeout: 120
+    payload: "{{ payload }}"
 ```
 
 and the following automation:
