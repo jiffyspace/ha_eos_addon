@@ -1,15 +1,13 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
 name: EOS add-on
-version: "1.0.7"
+version: "1.0.8"
 slug: eos
 description: Energy Optimization System add-on
 url: "https://github.com/Duetting/ha_eos_addon/tree/main/eos"
 arch:
-  - armhf
   - armv7
   - aarch64
   - amd64
-  - i386
 init: false
 map:
   - share:rw
