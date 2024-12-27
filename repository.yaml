@@ -1,0 +1,4 @@
+# https://developers.home-assistant.io/docs/add-ons/repository#repository-configuration
+name: EOS Home Assistant add-on repository
+url: 'https://github.com/Duetting/ha_eos_addon'
+maintainer: Markus Dütting <duetting@nospam_gmx.de>
