@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.0.10
+
+- Missing execute permission on s6 scripts.
+
 ## 1.0.9
 
 - local installation worked, remote doesn't. Maybe apparmor profile is not correctly applied?
