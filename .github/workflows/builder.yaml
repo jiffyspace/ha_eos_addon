@@ -22,7 +22,8 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4.2.2
-        submodules: recursive
+        with:
+          submodules: recursive
         
       - name: Get changed files
         id: changed_files
@@ -73,7 +74,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4.2.2
-        submodules: recursive
+        with:
+          submodules: recursive
 
       - name: Get information
         id: info
