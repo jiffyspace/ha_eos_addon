@@ -10,7 +10,7 @@ The optimization call can be used with the following rest command in the home as
 ```yaml
 rest_command: 
   eos_optimize:
-    url: http://localhost:8503/optimize?start_hour=0
+    url: http://localhost:8503/optimize
     method: POST
     content_type: application/json
     timeout: 120
