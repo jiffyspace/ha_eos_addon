@@ -31,3 +31,7 @@ COPY eos/requirements.txt .
 RUN pip install -Ur requirements.txt
 
 COPY eos/src .
+
+# use s6-overlay as init system
+WORKDIR /
+ENTRYPOINT ["/init"]

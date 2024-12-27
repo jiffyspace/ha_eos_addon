@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.0.12
+
+- remove apparmor profile
+
 ## 1.0.11
 
 - armv7 is also not working up to now
