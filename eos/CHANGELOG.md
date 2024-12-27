@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.0.4
+
+- submodules need to use https not ssh url's
+
 ## 1.0.3
 
 - Updated to newest EOS upstream version
