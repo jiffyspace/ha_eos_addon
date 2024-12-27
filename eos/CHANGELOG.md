@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.0.9
+
+- local installation worked, remote doesn't. Maybe apparmor profile is not correctly applied?
+
 ## 1.0.8
 
 - armhf is also not supported
