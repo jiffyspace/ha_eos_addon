@@ -167,7 +167,7 @@ template:
           forecast: "{{ hourly['weather.openweathermap'].forecast }}"
 ```
 
-To save the result for later usage (in at least the automation which dis-/allows discharging the PV battery), I used an empty template binary sensor:
+To save the result for later usage (in at least the automation which dis-/allows discharging the PV battery = automation.hausakku_entladung_erlaubt), I used an empty template binary sensor:
 ```yaml
 template:
   - binary_sensor:
@@ -176,12 +176,12 @@ template:
         device_class: occupancy
         state: ""
 ```
-and the python script [hass_entities](https://github.com/pmazz/ps_hassio_entities). The installation through HACS of that script didn't work for me anymore (incompatibility with HACS version >= 2.0). I had to manulally download the script and register it in my configuration.yaml.
+and the python script [hass_entities](https://github.com/pmazz/ps_hassio_entities). The installation through HACS of that script didn't work for me anymore (incompatibility with HACS version >= 2.0). I had to manually download the script and register it in my configuration.yaml.
 
 This setup isn't easy to replicate, but there is a lot of information needed for a good decision and I'm quite happy with it up to now.
 
 ## Configuration
-The config file for EOS is stored in the home assistant config in the /config/eos/EOS.config.json file and can be adapted there. The folder and file is created, when the add-on was at least one time started. The add-on needs to be restarted for the changes to have an effect.
+The config file for EOS is stored in the home assistant config in the /config/eos/EOS.config.json file and can be adapted there. The folder and file is created, when the add-on was at least started once. The add-on needs to be restarted for the changes to have an effect.
 
 ## Visualization Result PDF
 The visualization results PDF file is stored under /share/eos/visualization_results_new.pdf.
