@@ -30,7 +30,10 @@ COPY eos/requirements.txt .
 
 RUN pip install -Ur requirements.txt
 
-COPY eos/src .
+COPY eos/src ./src
+COPY eos/pyproject.toml .
+
+RUN pip install -e .
 
 # use s6-overlay as init system
 WORKDIR /
