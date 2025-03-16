@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.1.0
+
+- update EOS version 02.03.2025
+
 ## 1.0.12
 
 - remove apparmor profile
