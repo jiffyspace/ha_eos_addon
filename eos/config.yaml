@@ -13,8 +13,10 @@ map:
   - config:rw
 ports:
   8503/tcp: 8503
+  8503/tcp: 8504
 ports_description:
   8503/tcp: EOS fastapi server
+  8504/tcp: EOS Dashboard
 # options:
 # schema:
 backup_exclude:
