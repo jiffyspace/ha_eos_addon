@@ -189,5 +189,5 @@ This setup isn't easy to replicate, but there is a lot of information needed for
 The config file for EOS is stored in the home assistant config in the /config/eos/EOS.config.json file and can be adapted there. The folder and file is created, when the add-on was at least started once. The add-on needs to be restarted for the changes to have an effect.
 
 ## Visualization Result PDF
-The visualization results PDF file is stored under /share/eos/visualization_results_new.pdf.
+The visualization results PDF file is stored under /share/eos/visualization_results.pdf.
 
