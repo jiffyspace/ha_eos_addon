@@ -1,5 +1,9 @@
 # Home Assistant EOS Add-on:
 
+## Important note about upgrade to version 1.1
+Due to naming changes in the payload for the optimize call you need to adapt your automation!!!
+See below for the updated example.
+
 ## How to use
 
 This add-on makes the [EOS web server](https://github.com/Akkudoktor-EOS/EOS) available as Home Assistant add-on at the defined port (default 8503). 
@@ -66,22 +70,23 @@ actions:
                 ]
             },
             "pv_akku": {
-                "kapazitaet_wh": 9700,
-                "max_ladeleistung_w": 4000,
-                "start_soc_prozent": {{ states('sensor.scb_battery_soc') | int }},
-                "min_soc_prozent": 10
+                "capacity_wh": 9700,
+                "max_charge_power_w": 4000,
+                "initial_soc_percentage": {{ states('sensor.scb_battery_soc') | int }},
+                "min_soc_percentage": 15
             },
-            "wechselrichter": {
-                "max_leistung_wh": 8500
+            "inverter": {
+                "max_power_wh": 8500
             },
             "eauto": {
-                "kapazitaet_wh": 27000,
-                "lade_effizienz": 0.90,
-                "entlade_effizienz": 0.95,
-                "max_ladeleistung_w": 7360,
-                "start_soc_prozent": {{ states('sensor.car_soc') | int }},
-                "min_soc_prozent": 0
+                "capacity_wh": 27000,
+                "charging_efficiency": 0.90,
+                "discharging_efficiency": 0.95,
+                "max_charge_power_w": 7360,
+                "initial_soc_percentage": {{ states('sensor.car_soc') | int }},
+                "min_soc_percentage": 0
             },
+
             "dishwasher": {
                 "consumption_wh": 1500,
                 "duration_h": 3
@@ -140,7 +145,7 @@ mode: single
 
 The sent payload does need to be adapted to your setup.
 
-1. "gesamtlast": I'm using a template entity to calculate the power usage of all uncontrolled devices in W. Then an integration helper on top of it to calculate Wh and a utility meter which resets every hour. This is used in a sql sensor to get the corresponding power usage per hour of the last two days (48 values) and saves it in the attribute "state_list" of the "sensor.energie_ungesteuert_historie" entity. I'm not sure if that is the easiest approach, but it works for me.
+1. "gesamtlast": I'm using a template entity to calculate the power usage of all "uncontrolled" devices (so without wallbox, heating rod, washing machine, dryer, dishwasher) in W. Then an integration helper on top of it to calculate the Wh and a utility meter which resets every hour. This is used in a sql sensor to get the corresponding power usage per hour of the same two weekdays from last week (48 values) and saves it in the attribute "state_list" of the "sensor.energie_ungesteuert_historie" entity. I'm not sure if that is the easiest approach, but it works for me.
 2. "pv_prognose_wh": I'm using the [Open-Meteo Solar Forecast](https://github.com/rany2/ha-open-meteo-solar-forecast) HACS integration, which provides the estimated PV power per hour for today (sensor.energy_production_today_2) and tomorrow (sensor.energy_production_tomorrow_2).
 3. "strompreis_euro_pro_wh": I'm using the tibber api with the sensor definition from here: <https://community.home-assistant.io/t/tibber-schedul-prices-upcoming-24-hours-prices/391565/237>. If the values for tomorrow aren't yet available, I'm just using the values for today again.
 4. The SOC entity from my PV battery is named "sensor.scb_battery_soc".
