@@ -1,18 +1,20 @@
 # Home Assistant EOS Add-on:
 
 ## Important note about upgrade to version 1.1
+
 Due to naming changes in the payload for the optimize call you need to adapt your automation!!!
 See below for the updated example.
 
 ## How to use
 
-This add-on makes the [EOS web server](https://github.com/Akkudoktor-EOS/EOS) available as Home Assistant add-on at the defined port (default 8503). 
+This add-on makes the [EOS web server](https://github.com/Akkudoktor-EOS/EOS) available as Home Assistant add-on at the defined port (default 8503).
 
-[Swagger API documentation](https://petstore3.swagger.io/?url=https://raw.githubusercontent.com/Akkudoktor-EOS/EOS/refs/heads/main/docs/akkudoktoreos/openapi.json) 
+[Swagger API documentation](https://petstore3.swagger.io/?url=https://raw.githubusercontent.com/Akkudoktor-EOS/EOS/refs/heads/main/docs/akkudoktoreos/openapi.json)
 
 The optimization call can be used with the following rest command in the home assistant configuration.yaml:
+
 ```yaml
-rest_command: 
+rest_command:
   eos_optimize:
     url: http://localhost:8503/optimize
     method: POST
@@ -22,6 +24,7 @@ rest_command:
 ```
 
 and the following automation:
+
 ```yaml
 alias: EOS Prognose
 description: ""
@@ -38,12 +41,12 @@ actions:
                 "preis_euro_pro_wh_akku": 0.0001,
                 "einspeiseverguetung_euro_pro_wh": 0.0000624,
                 "gesamtlast": [
-                  {%- if state_attr('sensor.energie_ungesteuert_historie', 'state_list') is none or 
+                  {%- if state_attr('sensor.energie_ungesteuert_historie', 'state_list') is none or
                          (state_attr('sensor.energie_ungesteuert_historie', 'state_list').split(', ') | length != 48) %}
-                  519.038, 592.846, 435.848, 445.874, 499.916, 478.087, 481.537, 445.690, 446.141, 483.501, 
-                  571.204, 537.491, 556.887, 520.302, 618.852, 558.700, 747.631, 786.617, 730.839, 1975.696, 
-                  724.723, 1188.417, 562.051, 569.257, 580.815, 626.094, 709.573, 579.968, 498.139, 475.231, 
-                  462.958, 583.999, 536.610, 525.372, 543.754, 467.834, 542.264, 518.573, 761.854, 1478.119, 
+                  519.038, 592.846, 435.848, 445.874, 499.916, 478.087, 481.537, 445.690, 446.141, 483.501,
+                  571.204, 537.491, 556.887, 520.302, 618.852, 558.700, 747.631, 786.617, 730.839, 1975.696,
+                  724.723, 1188.417, 562.051, 569.257, 580.815, 626.094, 709.573, 579.968, 498.139, 475.231,
+                  462.958, 583.999, 536.610, 525.372, 543.754, 467.834, 542.264, 518.573, 761.854, 1478.119,
                   768.100, 783.750, 725.428, 662.777, 874.098, 605.425, 595.513, 628.590
                   {%- else -%}
                   {{ state_attr('sensor.energie_ungesteuert_historie', 'state_list') }}
@@ -151,6 +154,7 @@ The sent payload does need to be adapted to your setup.
 4. The SOC entity from my PV battery is named "sensor.scb_battery_soc".
 5. The SOC entity from my electric car is named "sensor.car_soc".
 6. Another template sensor delivers the temperature forecast for today and tomorrow per hour, with the help of the [OpenWeatherMap integration](https://www.home-assistant.io/integrations/openweathermap/):
+
 ```yaml
 template:
   - trigger:
@@ -173,6 +177,7 @@ template:
 ```
 
 To save the result for later usage (in at least the automation which dis-/allows discharging the PV battery = automation.hausakku_entladung_erlaubt), I used an empty template binary sensor:
+
 ```yaml
 template:
   - binary_sensor:
@@ -181,13 +186,15 @@ template:
         device_class: occupancy
         state: ""
 ```
+
 and the python script [hass_entities](https://github.com/pmazz/ps_hassio_entities). The installation through HACS of that script didn't work for me anymore (incompatibility with HACS version >= 2.0). I had to manually download the script and register it in my configuration.yaml.
 
 This setup isn't easy to replicate, but there is a lot of information needed for a good decision and I'm quite happy with it up to now.
 
 ## Configuration
+
 The config file for EOS is stored in the home assistant config in the /config/eos/EOS.config.json file and can be adapted there. The folder and file is created, when the add-on was at least started once. The add-on needs to be restarted for the changes to have an effect.
 
 ## Visualization Result PDF
-The visualization results PDF file is stored under /share/eos/visualization_results.pdf.
 
+The visualization results PDF file is stored under /share/eos/visualization_results.pdf.

@@ -1,9 +1,13 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.1.2
+
+- Add eos dashboard (default 8504) to configuration
+
 ## 1.1.1
 
 - updated documentation for new EOS version
-Important: naming changes in the EOS optimize call requires reconfiguration of the optimize automation call !!!
+  Important: naming changes in the EOS optimize call requires reconfiguration of the optimize automation call !!!
 
 ## 1.1.0
 
