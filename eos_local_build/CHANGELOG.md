@@ -1,5 +1,13 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.1.5
+
+- Readd build.yaml
+
+## 1.1.4
+
+- Bump version due to duplicated slug of local build version
+
 ## 1.1.3
 
 - Bump version for Github builder Action
