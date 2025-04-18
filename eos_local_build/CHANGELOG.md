@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.2
+
+- Add info about breaking change for config and optimization payload
+
 ## 1.1.6
 
 - Add git client

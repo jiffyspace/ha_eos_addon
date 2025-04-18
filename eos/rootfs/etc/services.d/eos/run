@@ -11,14 +11,18 @@ if [ ! -d /data/eos/cache ]; then
     mkdir -p "/data/eos/cache"
 fi
 chown -R eos "/data/eos/cache"
-ln -s "/data/eos/cache" "/opt/eos/cache"
+if [ ! -d /opt/eos/cache ]; then
+    ln -s "/data/eos/cache" "/opt/eos/cache"
+fi
 
 if [ ! -d /share/eos/output ]; then
     bashio::log.info "Creating /share/eos/output"
     mkdir -p "/share/eos/output"
 fi
 chown -R eos "/share/eos/output"
-ln -s "/share/eos/output" "/opt/eos/output"
+if [ ! -d /opt/eos/output ]; then
+    ln -s "/share/eos/output" "/opt/eos/output"
+fi
 
 if [ ! -d /config/eos ]; then
     bashio::log.info "Creating /config/eos"
@@ -33,9 +37,11 @@ else
     bashio::log.info "Use existing /config/eos/EOS.config.json"
 fi
 chown eos "/config/eos/EOS.config.json"
-ln -s "/config/eos/EOS.config.json" "/opt/eos/EOS.config.json"
+if [ ! -f /opt/eos/EOS.config.json ]; then
+    ln -s "/config/eos/EOS.config.json" "/opt/eos/EOS.config.json"
+fi
 
 ## Run your program
 bashio::log.info "Start EOS fastapi server"
-cd /opt/eos
+cd /opt/eos || exit
 exec python3 src/akkudoktoreos/server/eos.py

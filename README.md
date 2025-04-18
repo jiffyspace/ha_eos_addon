@@ -8,21 +8,17 @@ Home Assistant EOS addons
 
 This repository contains the following add-ons
 
-### [EOS add-on](./eos)
+- **[EOS add-on](./eos/README.md)**
+  This is just a home assistant add-on wrapper for the great work here: <https://github.com/Akkudoktor-EOS/EOS>
 
-![Supports aarch64 Architecture][aarch64-shield]
-![Supports amd64 Architecture][amd64-shield]
+  ![Supports aarch64 Architecture][aarch64-shield]
+  ![Supports amd64 Architecture][amd64-shield]
 
-\_EOS add-on.\_\_
-This is just a home assistant add-on wrapper for the great work here: <https://github.com/Akkudoktor-EOS/EOS>
+- **[EOS local build add-on](./eos_local_build/README.md)**
+  This is just a home assistant add-on wrapper which will be built locally for the great work here: <https://github.com/Akkudoktor-EOS/EOS>
 
-### [EOS local build add-on](./eos)
-
-![Supports aarch64 Architecture][aarch64-shield]
-![Supports amd64 Architecture][amd64-shield]
-
-\_EOS local build add-on.\_\_
-This is just a home assistant add-on wrapper which will be built locally for the great work here: <https://github.com/Akkudoktor-EOS/EOS>
+  ![Supports aarch64 Architecture][aarch64-shield]
+  ![Supports amd64 Architecture][amd64-shield]
 
 <!--
 
@@ -42,6 +38,3 @@ Notes to developers after forking or using the github template feature:
 - Share your repository on the forums https://community.home-assistant.io/c/projects/9
 - Do awesome stuff!
  -->
-
-[aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
-[amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg

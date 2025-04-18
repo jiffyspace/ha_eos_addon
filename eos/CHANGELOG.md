@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.1.5
+
+- Updated s6 run script to only create links when the target doesn't already exist
+
 ## 1.1.4
 
 - Bump version due to duplicated slug of local build version

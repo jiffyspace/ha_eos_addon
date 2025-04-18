@@ -1,8 +1,8 @@
 # Home Assistant EOS Add-on:
 
-## Important note about upgrade to version 1.1
+## Important note about upgrade to version 1.2
 
-Due to naming changes in the payload for the optimize call you need to adapt your automation!!!
+**Due to various changes in the configuration file and the payload for the optimize call you need to adapt your automation and recreate your config!!!**
 See below for the updated example.
 
 ## How to use
@@ -41,16 +41,13 @@ actions:
                 "preis_euro_pro_wh_akku": 0.0001,
                 "einspeiseverguetung_euro_pro_wh": 0.0000624,
                 "gesamtlast": [
-                  {%- if state_attr('sensor.energie_ungesteuert_historie', 'state_list') is none or
-                         (state_attr('sensor.energie_ungesteuert_historie', 'state_list').split(', ') | length != 48) %}
-                  519.038, 592.846, 435.848, 445.874, 499.916, 478.087, 481.537, 445.690, 446.141, 483.501,
-                  571.204, 537.491, 556.887, 520.302, 618.852, 558.700, 747.631, 786.617, 730.839, 1975.696,
-                  724.723, 1188.417, 562.051, 569.257, 580.815, 626.094, 709.573, 579.968, 498.139, 475.231,
-                  462.958, 583.999, 536.610, 525.372, 543.754, 467.834, 542.264, 518.573, 761.854, 1478.119,
-                  768.100, 783.750, 725.428, 662.777, 874.098, 605.425, 595.513, 628.590
-                  {%- else -%}
-                  {{ state_attr('sensor.energie_ungesteuert_historie', 'state_list') }}
-                  {% endif -%}
+                  {{ (("[ " + state_attr('sensor.energie_ungesteuert_heute', 'state_list') + " ]")| from_json
+                   + (("[ " + state_attr('sensor.energie_ungesteuert_letzte_woche', 'state_list') + " ]")|
+                         from_json)[("[ " + state_attr('sensor.energie_ungesteuert_heute', 'state_list') + " ]")| from_json| length:48]
+                   + (("[ " + state_attr('sensor.energie_ungesteuert_historie', 'state_list') + " ]")|
+                         from_json)[("[ " + state_attr('sensor.energie_ungesteuert_letzte_woche', 'state_list') + " ]")|
+                         from_json| length:48])
+                         | join (', ') }}
                 ],
                 "pv_prognose_wh": [
                   {% for key, value in state_attr('sensor.energy_production_today_2',
@@ -60,28 +57,32 @@ actions:
                   {%- endfor %}
                 ],
                 "strompreis_euro_pro_wh": [
-                  {% for value in state_attr('sensor.tibber_prices', 'today') |
+                  {% for value in state_attr('sensor.tibber_prices', 'today')[0:24] |
                   map(attribute='total') -%} {{ value / 1000.0 }}{%- if true %}, {% endif -%}
-                  {%- endfor %} {%- if state_attr('sensor.tibber_prices', 'tomorrow') is none
+                  {%- endfor %}{%- if state_attr('sensor.tibber_prices', 'today') | length == 23 %}{{states('sensor.tibber_prices')| float(0) / 1000.0}}, {% endif -%} {%- if state_attr('sensor.tibber_prices', 'tomorrow') is none
                   or state_attr('sensor.tibber_prices', 'tomorrow') | length == 0 %}  {% for
-                  value in state_attr('sensor.tibber_prices', 'today') |
-                  map(attribute='total') -%} {{ value / 1000.0 }}{%- if not loop.last %}, {%
+                  value in state_attr('sensor.epex_spot_data_net_price', 'data')[48:72] |
+                  map(attribute='price_per_kwh') -%} {{ value / 1000.0 }}{%- if not loop.last %}, {%
                   endif -%} {%- endfor %} {%- else -%} {% for value in
-                  state_attr('sensor.tibber_prices', 'tomorrow') | map(attribute='total') -%}
-                  {{ value / 1000.0 }}{%- if not loop.last %}, {% endif -%} {%- endfor %} {%
+                  state_attr('sensor.tibber_prices', 'tomorrow')[0:24] | map(attribute='total') -%}
+                  {{ value / 1000.0 }}{%- if not loop.last %}, {% endif -%} {%- endfor %}{%- if state_attr('sensor.tibber_prices', 'tomorrow') | length == 23 %}, {{states('sensor.tibber_prices')| float(0) / 1000.0}}{% endif -%} {%
                   endif %}
                 ]
             },
             "pv_akku": {
+                "device_id": "battery1",
                 "capacity_wh": 9700,
                 "max_charge_power_w": 4000,
                 "initial_soc_percentage": {{ states('sensor.scb_battery_soc') | int }},
                 "min_soc_percentage": 15
             },
             "inverter": {
-                "max_power_wh": 8500
+                "device_id": "inverter1",
+                "max_power_wh": 8500,
+                "battery_id": "battery1"
             },
             "eauto": {
+                "device_id": "ev1",
                 "capacity_wh": 27000,
                 "charging_efficiency": 0.90,
                 "discharging_efficiency": 0.95,
@@ -89,8 +90,8 @@ actions:
                 "initial_soc_percentage": {{ states('sensor.car_soc') | int }},
                 "min_soc_percentage": 0
             },
-
             "dishwasher": {
+                "device_id": "dishwasher1",
                 "consumption_wh": 1500,
                 "duration_h": 3
             },
@@ -232,7 +233,7 @@ FROM
 ```
 
 2. "pv_prognose_wh": I'm using the [Open-Meteo Solar Forecast](https://github.com/rany2/ha-open-meteo-solar-forecast) HACS integration, which provides the estimated PV power per hour for today (sensor.energy_production_today_2) and tomorrow (sensor.energy_production_tomorrow_2).
-3. "strompreis_euro_pro_wh": I'm using the tibber api with the sensor definition from here: <https://community.home-assistant.io/t/tibber-schedul-prices-upcoming-24-hours-prices/391565/237>. If the values for tomorrow aren't yet available, I'm just using the values for today again.
+3. "strompreis_euro_pro_wh": I'm using the tibber api with the sensor definition from here: <https://community.home-assistant.io/t/tibber-schedul-prices-upcoming-24-hours-prices/391565/237>. If the values for tomorrow aren't yet available, I'm using values from the [EPEX spot integration]<https://github.com/mampfes/ha_epex_spot>.
 4. The SOC entity from my PV battery is named "sensor.scb_battery_soc".
 5. The SOC entity from my electric car is named "sensor.car_soc".
 6. Another template sensor delivers the temperature forecast for today and tomorrow per hour, with the help of the [OpenWeatherMap integration](https://www.home-assistant.io/integrations/openweathermap/):
