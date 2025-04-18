@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.1.6
+
+- Add git client
+
 ## 1.1.5
 
 - Readd build.yaml
