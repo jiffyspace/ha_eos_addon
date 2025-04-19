@@ -1,9 +1,12 @@
-# Home Assistant EOS Add-on:
+# Home Assistant EOS local build Add-on:
 
 ## Important note about upgrade to version 1.2
 
 **Due to various changes in the configuration file and the payload for the optimize call you need to adapt your automation and recreate your config!!!**
+
 See below for the updated example.
+
+**Only install one variant of the EOS addon, they would definitely interfere in the used ports and would share the same config file and output folder!**
 
 ## How to use
 
