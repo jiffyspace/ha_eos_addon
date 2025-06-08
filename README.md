@@ -38,3 +38,18 @@ Notes to developers after forking or using the github template feature:
 - Share your repository on the forums https://community.home-assistant.io/c/projects/9
 - Do awesome stuff!
  -->
+
+## Contribution
+
+Currently the most work in this repo is updating the EOS source code and check if the changes still work with the documentation.
+To do this the following steps are important:
+
+- update eos: `git submodule update --remote --recursive`
+- Run the vscode task `Start Home Assistant`
+  - this takes up to 10 mins
+  - if you see for a while on the onboading screen an issue with DNS just wait longer
+- After setting up the devloperment homeassitant instance install the Addon `EOS add-on`
+- Start the addon
+- After starting go to the folder `tests`
+- Run the request in `prognose.http`
+- The result should be a 200 OK and should contain anything that is refered in the `DOCS.md`
