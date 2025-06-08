@@ -53,3 +53,4 @@ To do this the following steps are important:
 - After starting go to the folder `tests`
 - Run the request in `prognose.http`
 - The result should be a 200 OK and should contain anything that is refered in the `DOCS.md`
+- after sucessfull update increase the version number in `eos/config.yaml`
