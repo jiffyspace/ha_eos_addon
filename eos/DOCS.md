@@ -7,6 +7,14 @@ See below for the updated example.
 
 ## How to use
 
+### Comfortable way
+
+Use [EOS Connect](https://github.com/ohAnd/EOS_connect) and configure it.
+
+The result will be a nice UI and a MQTT Enties that you can use to automate your home. Please read the docs of eos connect for more information.
+
+### Manual way
+
 This add-on makes the [EOS web server](https://github.com/Akkudoktor-EOS/EOS) available as Home Assistant add-on at the defined port (default 8503).
 
 [Swagger API documentation](https://petstore3.swagger.io/?url=https://raw.githubusercontent.com/Akkudoktor-EOS/EOS/refs/heads/main/docs/akkudoktoreos/openapi.json)
