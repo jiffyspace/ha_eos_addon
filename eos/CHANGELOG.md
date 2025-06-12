@@ -1,5 +1,21 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.2.2
+
+- Add info about usage of new "recorder.get_statistics" action, which makes the usage of SQL sensors obsolete
+
+## 1.2.1
+
+- EOS (non local build) version update
+
+## 1.2
+
+- Add info about breaking change for config and optimization payload
+
+## 1.1.6
+
+- Add git client
+
 ## 1.1.5
 
 - Updated s6 run script to only create links when the target doesn't already exist

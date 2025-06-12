@@ -10,6 +10,17 @@ See below for the updated example.
 
 ## How to use
 
+### Comfortable way
+
+Use [EOS Connect](https://github.com/ohAnd/EOS_connect) and configure it.
+
+The result will be a nice UI and a MQTT Enties that you can use to automate your home. Please read the docs of eos connect for more information.
+
+### Manual way
+
+**Since Home Assistant version 2025.6 there is a new action available called "recorder.get_statistics", which makes the long term statistics available in e.g. automations.
+This means that the SQL sensors are not necessary anymore which makes the manual setup process a lot easier.** 
+
 This add-on makes the [EOS web server](https://github.com/Akkudoktor-EOS/EOS) available as Home Assistant add-on at the defined port (default 8503).
 
 [Swagger API documentation](https://petstore3.swagger.io/?url=https://raw.githubusercontent.com/Akkudoktor-EOS/EOS/refs/heads/main/docs/akkudoktoreos/openapi.json)
@@ -35,8 +46,67 @@ triggers:
   - trigger: time_pattern
     hours: /1
     minutes: "5"
+    id: Stunde
+  - trigger: homeassistant
+    event: start
+    id: Start
 conditions: []
 actions:
+  - if:
+      - condition: trigger
+        id:
+          - Start
+    then:
+      - delay:
+          hours: 0
+          minutes: 2
+          seconds: 0
+  - action: recorder.get_statistics
+    data:
+      period: hour
+      types:
+        - state
+      statistic_ids:
+        - sensor.energie_ungesteuert_pro_stunde
+      start_time: "{{ today_at() }}"
+    response_variable: energie_ungesteuert_heute
+  - action: recorder.get_statistics
+    data:
+      period: hour
+      types:
+        - state
+      statistic_ids:
+        - sensor.energie_ungesteuert_pro_stunde
+      start_time: "{{ today_at() - timedelta(days=2) }}"
+      end_time: "{{ today_at() }}"
+    response_variable: energie_ungesteuert_historie
+  - action: recorder.get_statistics
+    data:
+      period: hour
+      types:
+        - state
+      statistic_ids:
+        - sensor.energie_ungesteuert_pro_stunde
+      start_time: "{{ today_at() - timedelta(days=7) }}"
+      end_time: "{{ today_at() - timedelta(days=5) }}"
+    response_variable: energie_ungesteuert_letzte_woche
+  - action: python_script.hass_entities
+    data:
+      action: set_attributes
+      entity_id: binary_sensor.eos_prognose
+      attributes:
+        - energie_ungesteuert_heute: >-
+            {{
+            energie_ungesteuert_heute['statistics']['sensor.energie_ungesteuert_pro_stunde']|
+            map(attribute='state') | list }}
+        - energie_ungesteuert_historie: >-
+            {{
+            energie_ungesteuert_historie['statistics']['sensor.energie_ungesteuert_pro_stunde']|
+            map(attribute='state') | list }}
+        - energie_ungesteuert_letzte_woche: >-
+            {{
+            energie_ungesteuert_letzte_woche['statistics']['sensor.energie_ungesteuert_pro_stunde']|
+            map(attribute='state') | list }}
   - variables:
       payload: |-
         {
@@ -44,13 +114,12 @@ actions:
                 "preis_euro_pro_wh_akku": 0.0001,
                 "einspeiseverguetung_euro_pro_wh": 0.0000624,
                 "gesamtlast": [
-                  {{ (("[ " + state_attr('sensor.energie_ungesteuert_heute', 'state_list') + " ]")| from_json
-                   + (("[ " + state_attr('sensor.energie_ungesteuert_letzte_woche', 'state_list') + " ]")|
-                         from_json)[("[ " + state_attr('sensor.energie_ungesteuert_heute', 'state_list') + " ]")| from_json| length:48]
-                   + (("[ " + state_attr('sensor.energie_ungesteuert_historie', 'state_list') + " ]")|
-                         from_json)[("[ " + state_attr('sensor.energie_ungesteuert_letzte_woche', 'state_list') + " ]")|
-                         from_json| length:48])
-                         | join (', ') }}
+                  {{ ( state_attr('binary_sensor.eos_prognose', 'energie_ungesteuert_heute')
+                   + state_attr('binary_sensor.eos_prognose', 'energie_ungesteuert_letzte_woche')[
+                        state_attr('binary_sensor.eos_prognose', 'energie_ungesteuert_heute')| length:48]
+                   + state_attr('binary_sensor.eos_prognose', 'energie_ungesteuert_historie')[
+                        state_attr('binary_sensor.eos_prognose', 'energie_ungesteuert_letzte_woche')| length:48])
+                             | join (', ') }}
                 ],
                 "pv_prognose_wh": [
                   {% for key, value in state_attr('sensor.energy_production_today_2',
@@ -152,89 +221,7 @@ mode: single
 
 The sent payload does need to be adapted to your setup.
 
-1. "gesamtlast": I'm using a template entity to calculate the power usage of all "uncontrolled" devices (so without wallbox, heating rod, washing machine, dryer, dishwasher) in W. Then an integration helper on top of it to calculate the Wh and a utility meter which resets every hour. This is used in a sql sensor to get the corresponding power usage per hour of the same two weekdays from last week (48 values) and saves it in the attribute "state_list" of the "sensor.energie_ungesteuert_historie" entity. I'm not sure if that is the easiest approach, but it works for me.
-   I'm personally using the MariaDB addon as recorder due to "historical" reasons, so posting my SQL statement probably doesn't help anyone. Here the SQL statement from tecem which provided one for SQLite:
-
-```sql
-
-WITH hourly_data AS (
-  SELECT
-    strftime('%Y-%m-%d %H:00:00', datetime(s.last_updated_ts, 'unixepoch')) AS hour,
-    MAX(CAST(s.state AS INTEGER)) AS max_state
-  FROM
-    states s
-  INNER JOIN
-    states_meta sm ON s.metadata_id = sm.metadata_id
-  WHERE
-    sm.entity_id = 'sensor.load_energy_hourly'
-    AND s.last_updated_ts >= strftime('%s', strftime('%Y-%m-%d %H:00:00', 'now', '-48 hours'))
-    AND s.last_updated_ts < strftime('%s', strftime('%Y-%m-%d %H:00:00', 'now'))
-  GROUP BY
-    hour
-),
-previous_week_data AS (
-  SELECT
-    strftime('%Y-%m-%d %H:00:00', datetime(s.last_updated_ts, 'unixepoch', '-7 days')) AS hour,
-    MAX(CAST(s.state AS INTEGER)) AS max_state
-  FROM
-    states s
-  INNER JOIN
-    states_meta sm ON s.metadata_id = sm.metadata_id
-  WHERE
-    sm.entity_id = 'sensor.load_energy_hourly'
-    AND s.last_updated_ts >= strftime('%s', strftime('%Y-%m-%d %H:00:00', 'now', '-48 hours', '-7 days'))
-    AND s.last_updated_ts < strftime('%s', strftime('%Y-%m-%d %H:00:00', 'now', '-7 days'))
-  GROUP BY
-    hour
-),
-joined AS (
-  SELECT
-    h.hour,
-    h.max_state AS current_state,
-    COALESCE(pw.max_state, h.max_state) AS previous_state
-  FROM
-    hourly_data h
-  LEFT JOIN
-    previous_week_data pw ON h.hour = pw.hour
-),
-average_values AS (
-  SELECT
-    hour,
-    current_state,
-    previous_state,
-    CAST((COALESCE(current_state, 0) + COALESCE(previous_state, 0)) / 2 AS INTEGER) AS average_state
-  FROM
-    joined
-),
-last_full_hour AS (
-  SELECT
-    strftime('%Y-%m-%d %H:00:00', datetime(s.last_updated_ts, 'unixepoch')) AS last_hour,
-    MAX(CAST(s.state AS INTEGER)) AS last_hour_state
-  FROM
-    states s
-  INNER JOIN
-    states_meta sm ON s.metadata_id = sm.metadata_id
-  WHERE
-    sm.entity_id = 'sensor.load_energy_hourly'
-    AND s.last_updated_ts >= strftime('%s', strftime('%Y-%m-%d %H:00:00', 'now', '-1 hour'))
-    AND s.last_updated_ts < strftime('%s', strftime('%Y-%m-%d %H:00:00', 'now'))
-),
-final_output AS (
-  SELECT
-    GROUP_CONCAT(average_state) AS average_states,
-    GROUP_CONCAT(hour) AS hours
-  FROM
-    average_values
-)
-SELECT
-  average_states,
-  hours,
-  last_hour_state,
-  last_hour
-FROM
-  final_output, last_full_hour;
-```
-
+1. "gesamtlast": I'm using a template entity to calculate the power usage of all "uncontrolled" devices (so without wallbox, heating rod, washing machine, dryer, dishwasher) in W. Then an integration helper on top of it to calculate the Wh and a utility meter which resets every hour. This is used in the automation above to get the corresponding power usage per hour of the same two weekdays from last week (48 values).
 2. "pv_prognose_wh": I'm using the [Open-Meteo Solar Forecast](https://github.com/rany2/ha-open-meteo-solar-forecast) HACS integration, which provides the estimated PV power per hour for today (sensor.energy_production_today_2) and tomorrow (sensor.energy_production_tomorrow_2).
 3. "strompreis_euro_pro_wh": I'm using the tibber api with the sensor definition from here: <https://community.home-assistant.io/t/tibber-schedul-prices-upcoming-24-hours-prices/391565/237>. If the values for tomorrow aren't yet available, I'm using values from the [EPEX spot integration]<https://github.com/mampfes/ha_epex_spot>.
 4. The SOC entity from my PV battery is named "sensor.scb_battery_soc".
