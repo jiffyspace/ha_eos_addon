@@ -11,14 +11,14 @@ This repository contains the following add-ons
 - **[EOS add-on](./eos/README.md)**
   This is just a home assistant add-on wrapper for the great work here: <https://github.com/Akkudoktor-EOS/EOS>
 
-  ![Supports aarch64 Architecture][aarch64-shield]
-  ![Supports amd64 Architecture][amd64-shield]
+![Supports aarch64 Architecture][aarch64-shield]
+![Supports amd64 Architecture][amd64-shield]
 
 - **[EOS local build add-on](./eos_local_build/README.md)**
   This is just a home assistant add-on wrapper which will be built locally for the great work here: <https://github.com/Akkudoktor-EOS/EOS>
 
-  ![Supports aarch64 Architecture][aarch64-shield]
-  ![Supports amd64 Architecture][amd64-shield]
+![Supports aarch64 Architecture][aarch64-shield]
+![Supports amd64 Architecture][amd64-shield]
 
 <!--
 

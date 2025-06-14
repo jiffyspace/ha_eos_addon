@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
 name: EOS add-on
-version: "1.2.2"
+version: "1.2.3"
 slug: eos
 description: Energy Optimization System add-on
 url: "https://github.com/Duetting/ha_eos_addon/tree/main/eos"
@@ -23,3 +23,4 @@ backup_exclude:
   - /data/eos/cache
 image: "ghcr.io/duetting/{arch}-addon-eos"
 startup: services
+webui: http://[HOST]:[PORT:8504]

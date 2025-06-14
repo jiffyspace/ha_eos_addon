@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 1.2.3
+
+- Change IP listen addreess for server and EOSdash to 0.0.0.0 and add default config
+
 ## 1.2.2
 
 - Add info about usage of new "recorder.get_statistics" action, which makes the usage of SQL sensors obsolete
