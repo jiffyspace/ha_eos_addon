@@ -1,4 +1,4 @@
 # https://developers.home-assistant.io/docs/add-ons/repository#repository-configuration
-name: EOS Home Assistant add-on repository
+name: EOS Home Assistant add-on repository JHK
 url: 'https://github.com/jiffyspace/ha_eos_addon'
 maintainer: Jiffy Space <jiffy@no_sp_a_m_gmx.net>
